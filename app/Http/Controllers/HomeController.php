@@ -9,7 +9,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        Auth::user();
+        $user = Auth::user();
         return view('home');
     }
 }

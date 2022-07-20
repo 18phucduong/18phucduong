@@ -22,5 +22,7 @@ Route::controller(AuthController::class)->name('auth.')->group(function () {
     Route::get('/login', 'loginView')->name('login_view');
     Route::post('/login', 'login')->name('login');
     Route::get('/logout', 'logout')->name('logout')->middleware(['auth', 'auth.session']);
+    Route::get('/register', 'registerView')->name('register_vew');
+    Route::post('/register', 'storeUser')->name('register');
 });
 Route::middleware(['auth', 'auth.session'])->get('/home', [HomeController::class, 'index'])->name('home');
