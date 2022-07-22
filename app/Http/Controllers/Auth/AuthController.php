@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 
-use App\Http\Requests\Client\Auth\LoginRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Client\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Client\Auth\RegisterRequest;
+use App\Http\Requests\Client\Auth\ResetPasswordRequest;
+use App\Services\MailService;
+use App\Services\MailTokenService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +16,9 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     public function __construct(
-        protected UserService $userService
+        private UserService $userService,
+        private MailService $mailService,
+        private MailTokenService $mailTokenService,
     ) {
     }
     /**
@@ -66,5 +71,27 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/home');
+    }
+
+    public function forgotPasswordView()
+    {
+        return  view('auth.forgot-password');
+    }
+
+    public function sendForgotPasswordMail(ForgotPasswordRequest $request): void
+    {
+        $user = $this->userService->findUserVerifyByEmail($request->email);
+        $mailToken = $this->mailTokenService->generateResetPassWordToken($user);
+
+        $this->mailService->sendResetPasswordMail($user, $mailToken->token);
+    }
+
+    public function resetPasswordView()
+    {
+        return view('auth.reset_password_view');
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
     }
 }

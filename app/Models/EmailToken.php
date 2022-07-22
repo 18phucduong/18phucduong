@@ -9,10 +9,12 @@ class EmailToken extends Model
 {
     use HasFactory;
 
+    public $table = "email_tokens";
+
     protected $fillable = [
         'token',
         'type',
         'user_id',
-        'expired_time',
+        'expires_at',
     ];
 }

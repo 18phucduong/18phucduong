@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 
 class BaseMakeFile extends Command
 {
-    protected $extension = ".php";
+    protected $extension = ".txt";
     protected $fileName = "";
     protected $folderName = "";
     protected $folderPath = "";

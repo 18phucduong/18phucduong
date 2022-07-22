@@ -10,4 +10,12 @@ class UserService
     {
         return User::create($userData);
     }
+
+    public function findUserVerifyByEmail(string $email): ?User
+    {
+        return User::where([
+            ['email', '=', $email],
+            ['email_verified_at', '<>', null]
+        ])->first();
+    }
 }

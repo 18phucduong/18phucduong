@@ -50,4 +50,9 @@ class User extends Authenticatable
             set: fn ($value) => bcrypt($value),
         );
     }
+
+    public function isVerify()
+    {
+        return !is_null($this->email_verified_at);
+    }
 }

@@ -114,5 +114,7 @@ return [
             resource_path('views/vendor/mail'),
         ],
     ],
-
+    'token_expires_at' => [
+        'reset_password' =>  env('MAIL_RESET_PASSWORD_EXPIRES_TIME', 15),
+    ],
 ];

@@ -6,10 +6,8 @@ class MakeService extends BaseMakeFile
 {
 
     protected $extension = ".php";
-    protected $fileName = "";
     protected $folderName = "Services";
-    protected $folderPath = "";
-    protected $fullFileName = "";
+
     /**
      * The name and signature of the console command.
      *

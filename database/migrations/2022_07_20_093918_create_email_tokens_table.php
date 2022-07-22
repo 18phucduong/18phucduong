@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('token', 255);
             $table->unsignedBigInteger('user_id');
-            $table->tinyInteger('type');
-            $table->date('expired_time');
+            $table->unsignedTinyInteger('type');
+            $table->date('expires_at');
             $table->timestamps();
         });
     }

@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Enums\MailTokenType;
 use App\Models\EmailToken;
+use App\Models\User;
 use Illuminate\Support\Str;
 
 class MailTokenService
@@ -16,9 +18,20 @@ class MailTokenService
 
     private function checkTokenIsExists($token, int $type): bool
     {
-        return !is_null(EmailToken::findByFields([
-            'token' => $token,
-            'type' => $type
+        return !is_null(EmailToken::where([
+            ['token', '=', $token],
+            ['type', '=', $type]
         ])->first());
+    }
+
+    public function generateResetPassWordToken(User $user): EmailToken
+    {
+        $token = $this->generateToken(1);
+        return EmailToken::create([
+            'token' => $token,
+            'type' => MailTokenType::RESET_PASSWORD,
+            'user_id' => $user->id,
+            'expires_at' => now()->addDays(config('mail.token_expires_at.reset_password'))
+        ]);
     }
 }
