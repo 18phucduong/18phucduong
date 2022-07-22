@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Client\Auth\ForgotPasswordRequest;
+use App\Http\Requests\Client\Auth\LoginRequest;
 use App\Http\Requests\Client\Auth\RegisterRequest;
 use App\Http\Requests\Client\Auth\ResetPasswordRequest;
+use App\Http\Requests\Client\Auth\VerifyAccountRequest;
 use App\Services\MailService;
 use App\Services\MailTokenService;
 use App\Services\UserService;
@@ -27,9 +29,9 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $credentials = $request->only(['user_name', 'password']);
+        $credentials = $request->only(['email', 'password']);
 
         if (Auth::attempt($credentials, true)) {
             return redirect()->route('home');
@@ -86,12 +88,37 @@ class AuthController extends Controller
         $this->mailService->sendResetPasswordMail($user, $mailToken->token);
     }
 
-    public function resetPasswordView()
+    public function resetPasswordView(Request $request)
     {
-        return view('auth.reset_password_view');
+        return view('auth.reset-password', ['token' => $request->token]);
     }
 
     public function resetPassword(ResetPasswordRequest $request)
     {
+        $token = $this->mailTokenService->getMailTokenByToken($request->token);
+        $user = $token?->user;
+        if (!is_null($user)) {
+            $this->userService->update($user, $request->only(['password']));
+            $this->mailTokenService->delete($token);
+        }
+    }
+
+    public function sendVerifyAccount()
+    {
+        $user = auth()->user();
+        $mailToken = $this->mailTokenService->generateVerifyUserToken($user);
+        $this->mailService->sendVerifyAccountMail($user, $mailToken->token);
+
+        return redirect()->route('home');
+    }
+
+    public function verifyAccount(VerifyAccountRequest $request)
+    {
+        $token = $this->mailTokenService->getMailTokenByToken($request->token);
+        $user = $token?->user;
+        if (!is_null($user)) {
+            $this->userService->update($user, ['email_verified_at' => now()]);
+            $this->mailTokenService->delete($token);
+        }
     }
 }

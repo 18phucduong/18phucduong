@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Mail\ResetPasswordMail;
+use App\Mail\VerifyAccountMail;
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Mail\Mailable;
@@ -16,8 +17,14 @@ class MailService
             ->bcc($moreUsers)
             ->queue($mail);
     }
+
     public function sendResetPasswordMail(User|string $user, string  $token): void
     {
         $this->send($user, new ResetPasswordMail($token));
+    }
+
+    public function sendVerifyAccountMail(User|string $user, string  $token): void
+    {
+        $this->send($user, new VerifyAccountMail($token));
     }
 }

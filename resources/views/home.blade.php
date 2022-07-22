@@ -14,7 +14,10 @@
 <body>
     <div class="wrapper">
         <div class="container">
-            <a href="{{ route('auth.logout') }}" class="btn btn-danger">Logout</a>
+            @auth
+                <p><a href="{{ route('auth.send_verify_account') }}" class="link">Verify Account</a></p>
+            @endauth
+            <p><a href="{{ route('auth.logout') }}" class="btn btn-danger">Logout</a></p>
         </div>
     </div>
 </body>

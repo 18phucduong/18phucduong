@@ -30,5 +30,7 @@ Route::controller(AuthController::class)->name('auth.')->group(function () {
     Route::post('/send-forgot-password', 'sendForgotPasswordMail')->name('send_forgot_password');
     Route::get('/reset-password', 'resetPasswordView')->name('reset_password_view');
     Route::post('/reset-password', 'resetPassword')->name('reset_password');
+    Route::get('/verify-account', 'sendVerifyAccount')->name('send_verify_account')->middleware(['auth', 'auth.session']);;
+    Route::post('/verify-account', 'verifyAccount')->name('verify_account')->middleware(['auth', 'auth.session']);
 });
 Route::middleware(['auth', 'auth.session'])->get('/home', [HomeController::class, 'index'])->name('home');

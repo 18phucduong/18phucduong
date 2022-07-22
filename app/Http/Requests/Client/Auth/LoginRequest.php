@@ -14,6 +14,8 @@ class LoginRequest extends BaseRequest
      */
     public function rules()
     {
-        return [];
+        return [
+            'email' =>  'required|email',
+        ];
     }
 }

@@ -14,15 +14,27 @@
 <body>
     <div class="wrapper">
         <div class="container">
+
+            @if (!empty($errors->messages()['token']))
+                <p class="alert alert-danger">{{ $errors->messages()['token'][0] }}</p>
+            @endif
             <form action="{{ route('auth.reset_password') }}"method="POST">
                 @csrf
+                <input type="hidden" name="token" value="{{ $token }}" />
+
+
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                        placeholder="Enter email" name="email">
-                    @if (!empty($errors->messages()['email']))
-                        <p class="alert alert-danger">{{ $errors->messages()['email'][0] }}</p>
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"
+                        name="password">
+                    @if (!empty($errors->messages()['password']))
+                        <p class="alert alert-danger">{{ $errors->messages()['password'][0] }}</p>
                     @endif
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPasswordConfirmation">Password Confirmation</label>
+                    <input type="password" class="form-control" id="exampleInputPasswordConfirmation"
+                        placeholder="Password" name="password_confirmation">
                 </div>
                 <button type="submit" class="btn btn-primary">Change</button>
             </form>

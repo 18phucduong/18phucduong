@@ -116,5 +116,6 @@ return [
     ],
     'token_expires_at' => [
         'reset_password' =>  env('MAIL_RESET_PASSWORD_EXPIRES_TIME', 15),
+        'verify' =>  env('MAIL_VERIFY_USER_EXPIRES_TIME', 15),
     ],
 ];
