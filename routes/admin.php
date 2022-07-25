@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\TestMailController;
+use App\Http\Controllers\Admin\Auth\AuthController;
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,9 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 Route::get('send-test-mail', [TestMailController::class, 'sendTestMail']);
 Route::controller(AuthController::class)->name('auth.')->group(function () {
     Route::get('/login', 'loginView')->name('login_view');
@@ -35,3 +32,23 @@ Route::controller(AuthController::class)->name('auth.')->group(function () {
 });
 Route::middleware(['auth', 'auth.session'])->get('/home', [HomeController::class, 'index'])->name('home');
 Route::middleware(['auth', 'auth.session'])->get('/adnin', [HomeController::class, 'index'])->name('home');
+
+Route::prefix('admin')->group(function () {
+    Route::controller(AuthController::class)->group(function () {
+        Route::get('/login', 'loginView');
+        Route::post('/login', 'login');
+        Route::get('/forgot-password', 'forgotPasswordView')->name('forgot_password_view');
+        Route::post('/send-forgot-password', 'sendForgotPasswordMail')->name('send_forgot_password');
+        Route::get('/reset-password', 'resetPasswordView')->name('reset_password_view');
+        Route::post('/reset-password', 'resetPassword')->name('reset_password');
+    });
+
+    Route::group(['middleware' => ['auth:admin']], function () {
+        Route::controller(AuthController::class)->group(function () {
+            Route::get('/logout', 'logout')->name('logout')->middleware(['auth', 'auth.session']);
+            Route::get('/register', 'registerView')->name('register_vew');
+            Route::post('/register', 'storeUser')->name('register');
+        });
+        Route::get('/dashboard', [DashboardController::class, 'index']);
+    });
+});

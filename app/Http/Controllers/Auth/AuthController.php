@@ -45,12 +45,12 @@ class AuthController extends Controller
 
     public function loginView()
     {
-        return  view('auth.login');
+        return  view('client.pages.auth.login');
     }
 
     public function registerView()
     {
-        return  view('auth.register');
+        return  view('client.pages.auth.register');
     }
 
     public function storeUser(RegisterRequest $request)
@@ -77,7 +77,7 @@ class AuthController extends Controller
 
     public function forgotPasswordView()
     {
-        return  view('auth.forgot-password');
+        return  view('client.pages.auth.forgot-password');
     }
 
     public function sendForgotPasswordMail(ForgotPasswordRequest $request): void
@@ -90,7 +90,7 @@ class AuthController extends Controller
 
     public function resetPasswordView(Request $request)
     {
-        return view('auth.reset-password', ['token' => $request->token]);
+        return view('client.pages.auth.reset-password', ['token' => $request->token]);
     }
 
     public function resetPassword(ResetPasswordRequest $request)
